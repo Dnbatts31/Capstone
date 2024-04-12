@@ -117,7 +117,8 @@ app.post("/api/users/:id/carts", isLoggedIn, async (req, res, next) => {
 });
 
 //TODO:  add item to card is LoggedIn 
-app.post ("/api/users/:user_id/carts/:id", isLoggedIn, async (req, res, next){
+app.post ("/api/users/:user_id/carts/:id", isLoggedIn, async (req, res, next) =>
+{
   try{
 //check for product id and quantity from req.body
 const productID = req.body.productID

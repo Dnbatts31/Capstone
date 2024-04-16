@@ -1,4 +1,5 @@
 const { error } = require("console");
+const cors=require("cors")
 const {
   client,
   createTables,
@@ -17,6 +18,7 @@ const {
 } = require("./db");
 const express = require("express");
 const app = express();
+app.use(cors())
 app.use(express.json());
 
 //TODO: To be called to check if a user is logged in before processing the request and sending a response

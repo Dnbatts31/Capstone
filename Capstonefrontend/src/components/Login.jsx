@@ -3,20 +3,20 @@
 import { useState } from 'react';
 
 export default function Login() {
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const API_URL = "http://127.0.0.1:3000"
 
-    API_PATH = 'https://fsa-book-buddy-b6e748d1380d.herokuapp.com'
-
+  // TODO: Create or store token on front-end to use for authentication
   function handleSubmit(e) {
     e.preventDefault();
-    fetch(`${API_PATH}/api/users/login`, {
+    fetch(`${API_URL}/api/auth/login`, {
         method: "POST",
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          email: email,
+          username: username,
           password: password
         })
       }).then(response => response.json())
@@ -29,13 +29,13 @@ export default function Login() {
     <>
       <h2>Login</h2>
       <form onSubmit={handleSubmit}>
-        <label htmlFor="email">
-          Email:
+        <label htmlFor="username">
+          Username:
           <input 
-            type="email" 
-            id="email" 
-            name="email" 
-            value={email} onChange={(e) => setEmail(e.target.value)} 
+            type="username" 
+            id="username" 
+            name="username" 
+            value={username} onChange={(e) => setUsername(e.target.value)} 
             required 
           />
         </label>

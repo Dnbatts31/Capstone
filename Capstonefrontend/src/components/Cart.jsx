@@ -1,12 +1,9 @@
 import { useState, useEffect } from "react";
 
 /* TODO - add your code to create a functional React component that renders account details for a logged in user. Fetch the account data from the provided API. You may consider conditionally rendering a message for other users that prompts them to log in or create an account.  */
-export default function Account() {
+export default function Cart() {
   const [email, setEmail] = useState("");
-  const [name, setName] = useState("");
-  const [books, setBooks] = useState([]);
-
-  useEffect(() => fetchAccount());
+  const API_URL = "http://127.0.0.1:3000"
 
   async function fetchAccount() {
     await fetch("/api/users/me", {
@@ -37,7 +34,7 @@ export default function Account() {
           <li>Name: {name}</li>
           <li>Email: {email}</li>
         </ul>
-        <h3>Rented Books</h3>
+        <h3>Purchase History</h3>
         <ul>{}</ul>
       </section>
     </>

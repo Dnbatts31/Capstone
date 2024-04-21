@@ -2,6 +2,7 @@ const { error } = require("console");
 const cors = require("cors");
 const {
   client,
+  checkout,
   createTables,
   createUser,
   createProduct,
@@ -10,6 +11,7 @@ const {
   fetchProduct,
   fetchProducts,
   fetchCart,
+  fetchCartProducts,
   destroyCart,
   authenticate,
   findUserWithToken,
@@ -166,6 +168,34 @@ app.delete("/api/users/:user_id/carts/:id", async (req, res, next) => {
     await destroyCart({ user_id: req.params.user_id, id: req.params.id });
     res.sendStatus(204);
   } catch (ex) {
+    next(ex);
+  }
+});
+
+app.delete("/api/users/:user_id/carts/:product_id", async (req, res, next) => {
+  try {
+    const cart = await fetchCart(req.params.user_id);
+    await removeCartProduct(cart.id, req.params.product_id);
+    res.send(await fetchCartProducts(cart.id));
+  } catch (ex) {
+    next(ex);
+  }
+});
+
+app.post("/api/users/:user_id/checkout", async (req, res, next) => {
+  try {
+    const cart = await fetchCart(req.params.user_id);
+    const cartProducts = await fetchCartProducts(cart.id);
+
+    if (cartProducts.length === 0) {
+      return res.status(400).json({ message: "Cart is empty" });
+    }
+
+    await checkout(cart.id);
+
+    res.json({ message: "Checkout successful" });
+  }
+  catch (ex) {
     next(ex);
   }
 });

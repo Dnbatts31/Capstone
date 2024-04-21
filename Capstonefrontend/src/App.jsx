@@ -16,7 +16,6 @@ import './App.css';
 function App() {
   const [token, setToken] = useState(null);
   const [user, setUser] = useState(null);
-  let { id } = useParams();
 
   return (
     <>

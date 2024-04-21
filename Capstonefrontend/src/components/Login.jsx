@@ -10,9 +10,9 @@ export default function Login(props) {
   const navigate = useNavigate();
 
   // TODO: Create or store token on front-end to use for authentication
-  function handleSubmit(e) {
+  async function handleSubmit(e) {
     e.preventDefault();
-    fetch(`${API_URL}/api/auth/login`, {
+    await fetch(`${API_URL}/api/auth/login`, {
         method: "POST",
         headers: {
           'Content-Type': 'application/json',
@@ -26,6 +26,8 @@ export default function Login(props) {
           if (result.token) {
             props.setToken(result.token);
             props.setUser(result.userID);
+            console.log(result.token);
+            console.log(result.userID);
             navigate('/');
           }
         })

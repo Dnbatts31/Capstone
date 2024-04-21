@@ -140,7 +140,7 @@ const fetchProduct = async (id) => {
 
 const fetchCart = async (user_id) => {
   const SQL = `
-    SELECT * FROM carts where user_id = $1
+    SELECT * FROM carts where user_id = $1;
   `;
   const response = await client.query(SQL, [user_id]);
   return response.rows[0];
@@ -148,7 +148,7 @@ const fetchCart = async (user_id) => {
 
 const fetchCartProducts = async (cart_id) => {
   const SQL = `
-    SELECT p.id p.name cp.quantity FROM carts_products cp INNER JOIN products ON cp.product_id = p.id WHERE cp.carts_id=$1
+    SELECT * FROM carts_products cp INNER JOIN products p ON cp.product_id = p.id WHERE cp.carts_id=$1;
   `;
   const response = await client.query(SQL, [cart_id]);
   return response.rows;
@@ -172,13 +172,20 @@ const removeProduct = async (product_id) => {
 };
 
 const removeCartProduct = async (cart_id, product_id) => {
-  const SQL = `DELETE FROM carts_products WHERE carts_id=;$1 AND product_id=$2`;
+  const SQL = `DELETE FROM carts_products WHERE carts_id=;$1 AND product_id=$2 LIMIT 1`;
   const response = await client.query(SQL, [cart_id, product_id]);
   return response;
 };
 
+const checkout = async (cart_id) => {
+  const SQL = `DELETE FROM carts_products WHERE carts_id=$1`;
+  const response = await client.query(SQL, [cart_id]);
+  return response;
+}
+
 module.exports = {
   client,
+  checkout,
   createTables,
   createUser,
   createProduct,
@@ -187,6 +194,7 @@ module.exports = {
   fetchProduct,
   fetchProducts,
   fetchCart,
+  fetchCartProducts,
   createCart,
   destroyCart,
   authenticate,

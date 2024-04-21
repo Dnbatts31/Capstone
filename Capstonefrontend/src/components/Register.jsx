@@ -1,10 +1,12 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 /* TODO - add your code to create a functional React component that renders a registration form */
 export default function Register() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const API_URL = "http://127.0.0.1:3000/"
+  const API_URL = "http://127.0.0.1:3000"
+  const navigate = useNavigate();
 
   function handleSubmit(e) {
     e.preventDefault();
@@ -19,17 +21,18 @@ export default function Register() {
       }),
     })
       .then((response) => response.json())
-      .then((result) => {
-        console.log(result);
+      .then((data) => {
+        console.log(data);
+        navigate("/login");
       })
       .catch(console.error);
   }
   return (
     <>
-      <h2>register</h2>
-      <form onSubmit={handleSubmit}>
+      <h2 className="title">Register</h2>
+      <form className="form" onSubmit={handleSubmit}>
         <label htmlFor="username">
-          Username:
+          Username:&nbsp;
           <input
             type="username"
             id="username"
@@ -39,9 +42,8 @@ export default function Register() {
             required
           />
         </label>
-        <br />
         <label htmlFor="password">
-          Password:
+          Password:&nbsp;
           <input
             type="password"
             id="password"
@@ -51,7 +53,6 @@ export default function Register() {
             required
           />
         </label>
-        <br />
         <button type="submit">Register</button>
       </form>
     </>

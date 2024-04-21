@@ -32,10 +32,10 @@ export default function Products() {
 
   return (
     <div>
-      <h1>Products</h1>
+      <h1 className="title">Products</h1>
       {products.map((product) => {
         return (
-          <Link key={product.id} to={`/products/${product.id}`}>
+          <Link className="a" key={product.id} to={`products/${product.id}`}>
             <section className="product-card">
               {/* <img src={product.coverimage} alt={product.title + " cover image"} height="200px" /> */}
               <div className="product-card-contents">

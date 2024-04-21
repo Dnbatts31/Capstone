@@ -11,20 +11,22 @@ import Product from "./components/Product.jsx";
 import Login from "./components/Login.jsx";
 import Cart from "./components/Cart.jsx";
 import Register from "./components/Register.jsx";
+import './App.css';
 
 function App() {
   const [token, setToken] = useState(null);
+  const [user, setUser] = useState(null);
   let { id } = useParams();
 
   return (
     <>
       <Router>
-        <Navigations set-token={setToken}/>
+        <Navigations setToken={setToken} token={token}/>
         <Routes>
-          <Route path="/products/:id" element={<Product />} />
+          <Route path="/products/:id" element={<Product user={user}/>} />
           <Route path="/products" element={<Products />} />
-          <Route path="/cart" element={<Cart />} />
-          <Route path="/login" element={<Login set-token={setToken}/>} />
+          <Route path="/cart" element={<Cart user={user}/>} />
+          <Route path="/login" element={<Login setToken={setToken} setUser={setUser}/>} />
           <Route path="/register" element={<Register />} />
           <Route path="/" element={<Products />} />
         </Routes>

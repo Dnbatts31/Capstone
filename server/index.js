@@ -21,6 +21,8 @@ const express = require("express");
 const app = express();
 app.use(cors());
 app.use(express.json());
+const jwt = require("jsonwebtoken");
+const secret = process.env.JWT || "supersecretpassword";
 
 //TODO: To be called to check if a user is logged in before processing the request and sending a response
 async function isLoggedIn(req, res, next) {
@@ -76,10 +78,21 @@ app.post("/api/auth/login", async (req, res, next) => {
 
 app.post("/api/auth/register", async (req, res, next) => {
   try {
-    res.send(await createUser(req.body));
+    const user = await createUser(req.body);
+    await createCart({ user_id: user.id });
+    res.send(user);
   } catch (ex) {
     next(ex);
   }
+});
+
+app.get("/api/auth/validate", async (req, res, next) => {
+  console.log(req.headers.authorization);
+  const valid = jwt.verify(req.headers.authorization, secret);
+  if (!valid) {
+    res.status(401).send("invalid token");
+  }
+  res.send("valid token");
 });
 
 app.get("/api/auth/me", async (req, res, next) => {
@@ -90,7 +103,7 @@ app.get("/api/auth/me", async (req, res, next) => {
   }
 });
 
-app.get("/api/users", isLoggedIn, isAdmin, async (req, res, next) => {
+app.get("/api/users", async (req, res, next) => {
   try {
     res.send(await fetchUsers());
   } catch (ex) {
@@ -98,15 +111,16 @@ app.get("/api/users", isLoggedIn, isAdmin, async (req, res, next) => {
   }
 });
 
-app.get("/api/users/:id/carts", isLoggedIn, async (req, res, next) => {
+app.get("/api/users/:id/carts", async (req, res, next) => {
   try {
-    res.send(await fetchCart(req.params.id));
+    const cart = await fetchCart(req.params.id);
+    res.send(await fetchCartProducts(cart.id));
   } catch (ex) {
     next(ex);
   }
 });
 
-app.post("/api/users/:id/carts", isLoggedIn, async (req, res, next) => {
+app.post("/api/users/:id/carts", async (req, res, next) => {
   try {
     res.status(201).send(
       await createCart({
@@ -119,33 +133,31 @@ app.post("/api/users/:id/carts", isLoggedIn, async (req, res, next) => {
 });
 
 //TODO:  add item to card is LoggedIn
-app.post(
-  "/api/users/:user_id/carts/:id",
-  isLoggedIn,
-  async (req, res, next) => {
-    try {
-      //check for product id and quantity from req.body
-      const productID = req.body.productID;
-      const quantity = req.body.quantity;
-      if (!productID || !quantity) {
-        const error = new Error("productID or quantity missing");
-        error.status = 403;
-        next(error);
-      }
+app.post("/api/users/:user_id/carts/:id", async (req, res) => {
+  try {
+    const { user_id, id } = req.params;
+    const { productID, quantity } = req.body;
 
-      //add product to cart
-      const cart_id = await fetchCart(req.user_id);
-      await createCartProducts(cart_id, productID, quantity);
-
-      //createCartProducts
-
-      //send response
-      res.send("items added to the cart");
-    } catch (ex) {
-      res.status(400).send("error occured");
+    if (!productID || !quantity) {
+      return res
+        .status(400)
+        .json({ message: "Product ID or quantity missing" });
     }
+
+    const cart = await fetchCart(user_id);
+    console.log(cart);
+    if (!cart) {
+      return res.status(404).json({ message: "Cart not found" });
+    }
+
+    await createCartProducts(cart.id, productID, quantity);
+
+    res.json({ message: "Items added to the cart" });
+  } catch (ex) {
+    console.error("Error processing request:", ex);
+    res.status(500).json({ message: "Error occurred" });
   }
-);
+});
 
 //destroy carted_products (ie remove from cart)
 
@@ -167,7 +179,7 @@ app.get("/api/products", async (req, res, next) => {
 });
 
 //TODO add route to create products (ADMIN ONLY)
-app.post("/api/products", isAdmin, async (req, res, next) => {
+app.post("/api/products", async (req, res, next) => {
   try {
     //check the request body for product data
     const result = await createProducts(req.body.product);
@@ -183,14 +195,14 @@ app.post("/api/products", isAdmin, async (req, res, next) => {
 
 app.get("/api/products/:id", async (req, res, next) => {
   try {
-    res.send(await fetchProduct());
+    res.send(await fetchProduct(req.params.id));
   } catch (ex) {
     next(ex);
   }
 });
 
 //TODO add route to delete products (ADMIN ONLY)
-app.delete("/api/products/:id", isAdmin, async (req, res, next) => {
+app.delete("/api/products/:id", async (req, res, next) => {
   try {
     //check the request body for product data
     const result = await removeProduct(req.params.id);
@@ -214,30 +226,30 @@ const init = async () => {
   await client.connect();
   console.log("connected to database");
 
-  await createTables();
-  console.log("tables created");
+  // await createTables();
+  // console.log("tables created");
 
-  const [moe, lucy, ethyl, curly, foo, bar, bazz, quq, fip] = await Promise.all(
-    [
-      createUser({ username: "moe", password: "m_pw" }),
-      createUser({ username: "lucy", password: "l_pw" }),
-      createUser({ username: "ethyl", password: "e_pw" }),
-      createUser({ username: "curly", password: "c_pw" }),
-      createProduct({ name: "foo" }),
-      createProduct({ name: "bar" }),
-      createProduct({ name: "bazz" }),
-      createProduct({ name: "quq" }),
-      createProduct({ name: "fip" }),
-    ]
-  );
+  // const [moe, lucy, ethyl, curly, foo, bar, bazz, quq, fip] = await Promise.all(
+  //   [
+  //     createUser({ username: "moe", password: "m_pw" }),
+  //     createUser({ username: "lucy", password: "l_pw" }),
+  //     createUser({ username: "ethyl", password: "e_pw" }),
+  //     createUser({ username: "curly", password: "c_pw" }),
+  //     createProduct({ name: "foo" }),
+  //     createProduct({ name: "bar" }),
+  //     createProduct({ name: "bazz" }),
+  //     createProduct({ name: "quq" }),
+  //     createProduct({ name: "fip" }),
+  //   ]
+  // );
 
-  console.log(await fetchUsers());
-  console.log(await fetchProducts());
+  // console.log(await fetchUsers());
+  // console.log(await fetchProducts());
 
-  console.log(await fetchCart(moe.id));
-  const favoritcart = await createCart({
-    user_id: moe.id,
-  });
+  // console.log(await fetchCart(moe.id));
+  // const favoritcart = await createCart({
+  //   user_id: moe.id,
+  // });
   app.listen(port, () => console.log(`listening on port ${port}`));
 };
 

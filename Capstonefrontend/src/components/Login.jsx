@@ -1,11 +1,13 @@
 /* TODO - add your code to create a functional React component that renders a login form */
 
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
-export default function Login() {
+export default function Login(props) {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const API_URL = "http://127.0.0.1:3000"
+  const navigate = useNavigate();
 
   // TODO: Create or store token on front-end to use for authentication
   function handleSubmit(e) {
@@ -21,16 +23,20 @@ export default function Login() {
         })
       }).then(response => response.json())
         .then(result => {
-          console.log(result);
+          if (result.token) {
+            props.setToken(result.token);
+            props.setUser(result.userID);
+            navigate('/');
+          }
         })
         .catch(console.error);
   }
   return (
     <>
-      <h2>Login</h2>
-      <form onSubmit={handleSubmit}>
+      <h2 className='title'>Login</h2>
+      <form className='form' onSubmit={handleSubmit}>
         <label htmlFor="username">
-          Username:
+          Username:&nbsp;
           <input 
             type="username" 
             id="username" 
@@ -39,9 +45,8 @@ export default function Login() {
             required 
           />
         </label>
-        <br/>
         <label htmlFor="password">
-          Password:
+          Password:&nbsp;
           <input 
             type="password" 
             id="password" 
@@ -50,7 +55,6 @@ export default function Login() {
             required 
           />
         </label>
-        <br/>
         <button type="submit">Login</button>
       </form>
     </>

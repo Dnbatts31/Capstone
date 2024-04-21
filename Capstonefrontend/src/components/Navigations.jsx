@@ -1,35 +1,55 @@
 import { Link } from "react-router-dom";
+import logo from "../assets/logo.png";
+
 /* TODO - add your code to create a functional React component that renders a navigation bar for the different views in your single page application. You may consider conditionally rendering some options - for example 'Login' should be available if someone has not logged in yet. */
-export default function Navigations() {
-  // TODO - implement the authentication check
+export default function Navigations(props) {
+  const API_URL = "http://127.0.0.1:3000"
+
   function isAuthenticated() {
-    return false;
+    fetch(`${API_URL}/api/auth/validate`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `${props.token}`,
+      },
+    })
+      .then((response) => {
+        if (response.ok) {
+          return true;
+        }
+        throw new Error("could not validate");
+      })
+      .catch((error) => {
+        console.error(error);
+        return false;
+      });
   }
 
-  // TODO - implement the log out handler
-  async function handleLogOut() {
+  async function handleLogOut(e) {
+    e.preventDefault();
     console.log("Logging out");
+    props.setToken(null);
   }
 
   return (
     <nav>
       <header>
-        <img src="../assets/logo.png" alt="meek's logo" />
+        <img src={logo} alt="meek's logo" height="100px" />
         <h1>Meeks T-Shirt Shop</h1>
       </header>
-      <div>
+      <div className="nav-links">
         <ul>
           <li>
-            <Link to="/products">T-Shirts</Link>
+            <Link className="a" to="/products">T-Shirts</Link>
           </li>
         </ul>
       </div>
-      <div>
+      <div className="nav-account">
         <ul>
-          {isAuthenticated() ? (
+          {props.token ? (
             <>
               <li>
-                <Link to="/cart">Cart</Link>
+                <Link className="a" to="/cart">Cart</Link>
               </li>
               <li>
                 <a href="#" onClick={handleLogOut}>
@@ -40,10 +60,10 @@ export default function Navigations() {
           ) : (
             <>
               <li>
-                <Link to="/login">Login</Link>
+                <Link className="a" to="/login">Login</Link>
               </li>
               <li>
-                <Link to="/register">Register</Link>
+                <Link className="a" to="/register">Register</Link>
               </li>
             </>
           )}

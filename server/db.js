@@ -1,9 +1,10 @@
 const pg = require("pg");
 const client = new pg.Client(
-  process.env.DATABASE_URL || "postgres://localhost/acme_auth_store_db"
+  process.env.DATABASE_URL ||
+    "postgres://db_sjjh_user:80zyC9ctrH0qZcxzRgS3WBasP2wD8Rpp@dpg-coj6uddjm4es73a45310-a.ohio-postgres.render.com/db_sjjh?ssh=1" //"postgres://localhost/acme_auth_store_db"
 );
 const uuid = require("uuid");
-const bcrypt = require("bcrypt");
+const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const secret = process.env.JWT || "supersecretpassword";
 
@@ -181,7 +182,7 @@ const checkout = async (cart_id) => {
   const SQL = `DELETE FROM carts_products WHERE carts_id=$1`;
   const response = await client.query(SQL, [cart_id]);
   return response;
-}
+};
 
 module.exports = {
   client,

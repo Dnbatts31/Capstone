@@ -1,7 +1,7 @@
 const pg = require("pg");
 const client = new pg.Client(
   process.env.DATABASE_URL ||
-    "postgres://db_sjjh_user:80zyC9ctrH0qZcxzRgS3WBasP2wD8Rpp@dpg-coj6uddjm4es73a45310-a.ohio-postgres.render.com/db_sjjh?ssh=1" //"postgres://localhost/acme_auth_store_db"
+    "postgres://db_sjjh_user:80zyC9ctrH0qZcxzRgS3WBasP2wD8Rpp@dpg-coj6uddjm4es73a45310-a.ohio-postgres.render.com/db_sjjh?ssl=1" //"postgres://localhost/acme_auth_store_db"
 );
 const uuid = require("uuid");
 const bcrypt = require("bcryptjs");

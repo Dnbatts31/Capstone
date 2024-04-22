@@ -5,7 +5,7 @@ import { useParams } from "react-router-dom";
 export default function SingleProduct(props) {
   const { id } = useParams();
   let [product, setProduct] = useState({})
-  const API_URL = "http://127.0.0.1:3000"
+  const API_URL = "https://capstone-3efc.onrender.com"; //"http://127.0.0.1:3000";
 
   useEffect(() => {
     async function getProduct() {

@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 export default function Register() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const API_URL = "http://127.0.0.1:3000"
+  const API_URL = "https://capstone-3efc.onrender.com"; //"http://127.0.0.1:3000";
   const navigate = useNavigate();
 
   function handleSubmit(e) {

@@ -1,0 +1,142 @@
+body {
+  font-family: Georgia, serif;
+  background-color: #f8f8f8;
+  margin: 0;
+  padding: 0;
+}
+
+#logo-image {
+  width: 30px;
+  margin-right: 10px;
+}
+
+.book-card {
+  display: flex;
+  padding: 8px;
+}
+
+.book-card-contents {
+  margin-left: 8px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.book-card-contents p,
+h3 {
+  margin: 0;
+}
+
+nav {
+  min-width: 100vw;
+  max-height: 120px;
+  display: flex;
+  justify-content: space-between;
+  padding: 10px;
+  background-color: pink;
+}
+
+nav header {
+  display: flex;
+  align-items: center;
+}
+
+nav header img {
+  margin-right: 15px;
+}
+
+.nav-links {
+  display: flex;
+  align-items: center;
+}
+
+.nav-links ul {
+  list-style-type: none;
+}
+
+.nav-account {
+  display: flex;
+  align-items: center;
+  margin-right: 20px
+}
+
+.nav-account ul {
+  list-style-type: none;
+  display: flex;
+}
+
+.nav-account ul li {
+  margin: 0 30px 0 0;
+}
+
+.a {
+  text-decoration: none;
+  color: black;
+}
+
+.title {
+  font-size: 2rem;
+  text-align: center;
+}
+
+.product-card {
+  display: flex;
+  border: 1px solid pink;
+  border-radius: 10px;
+  margin: 10px;
+}
+
+.product-card:hover {
+  cursor: pointer;
+  transform: scale(1.01);
+  box-shadow: 0 0 10px rgba(58, 27, 27, 0.1);
+}
+
+.product-card-contents {
+  padding: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  width: 50%;
+  margin: 0 auto;
+  border: 1px solid pink;
+  border-radius: 10px;
+  padding: 20px;
+  align-items: center;
+  justify-content: space-evenly;
+}
+
+.form input {
+  margin-bottom: 10px;
+  padding: 7px;
+  border-radius: 5px;
+  border: 1px solid pink;
+}
+
+.form label {
+  margin-right: 10px;
+}
+
+.form button {
+  padding: 10px;
+  border-radius: 5px;
+  border: 1px solid pink;
+  background-color: pink;
+  font-size: 0.9rem;
+}
+
+.form button:hover {
+  background-color: rgb(255, 170, 184);
+  cursor: pointer;
+}
+
+.form button:active {
+  transform: translate(1px, 1px);
+}
+/* Add your own custom styles here */

@@ -63,11 +63,11 @@ async function isAdmin(req, res, next) {
 //for deployment only
 const path = require("path");
 app.get("/", (req, res) =>
-  res.sendFile(path.join(__dirname, "../client/dist/index.html"))
+  res.sendFile(path.join(__dirname, "../Client/dist/index.html"))
 );
 app.use(
   "/assets",
-  express.static(path.join(__dirname, "../client/dist/assets"))
+  express.static(path.join(__dirname, "../Client/dist/assets"))
 );
 
 app.post("/api/auth/login", async (req, res, next) => {
@@ -194,8 +194,7 @@ app.post("/api/users/:user_id/checkout", async (req, res, next) => {
     await checkout(cart.id);
 
     res.json({ message: "Checkout successful" });
-  }
-  catch (ex) {
+  } catch (ex) {
     next(ex);
   }
 });
@@ -256,12 +255,11 @@ const init = async () => {
   await client.connect();
   console.log("connected to database");
 
-   await createTables();
-   console.log("tables created");
+  await createTables();
+  console.log("tables created");
 
-   const [moe, lucy, ethyl, curly, foo, bar, bazz, quq, fip] = await Promise.all(
+  const [moe, lucy, ethyl, curly, foo, bar, bazz, quq, fip] = await Promise.all(
     [
-  
       createProduct({ name: "butterfly" }),
       createProduct({ name: "Happy" }),
       createProduct({ name: "joy" }),

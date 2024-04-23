@@ -4,7 +4,7 @@ const client = new pg.Client(
     "postgres://db_sjjh_user:80zyC9ctrH0qZcxzRgS3WBasP2wD8Rpp@dpg-coj6uddjm4es73a45310-a.ohio-postgres.render.com/db_sjjh?ssl=1" //"postgres://localhost/acme_auth_store_db"
 );
 const uuid = require("uuid");
-const bcrypt = require("bcryptjs");
+const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const secret = process.env.JWT || "supersecretpassword";
 
